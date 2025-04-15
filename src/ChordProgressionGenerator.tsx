@@ -62,15 +62,6 @@ const styles = {
     fontSize: '0.875rem',
     color: '#dc2626'
   },
-  apiKeyContainer: {
-    width: '100%',
-    marginBottom: '1.5rem',
-    transition: 'all 0.3s',
-    backgroundColor: '#eff6ff',
-    padding: '1rem',
-    borderRadius: '0.5rem',
-    border: '1px solid #bfdbfe'
-  },
   progressionContainer: {
     width: '100%',
     backgroundColor: '#f9fafb',
@@ -152,10 +143,11 @@ const ChordProgressionGenerator: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [fileName, setFileName] = useState<string>('chord-progression');
-  const [apiKey, setApiKey] = useState<string>('');
-  const [showApiKeyInput, setShowApiKeyInput] = useState<boolean>(false);
   const synth = useRef<Tone.PolySynth | null>(null);
   const part = useRef<Tone.Part | null>(null);
+
+  // Server URL - adjust this if your server runs on a different port
+  const serverUrl = 'http://localhost:3001';
 
   // Initialize Tone.js synth
   const initSynth = (): void => {
@@ -164,16 +156,10 @@ const ChordProgressionGenerator: React.FC = () => {
     }
   };
 
-  // Process natural language prompt to generate chord progression using Anthropic API
+  // Process natural language prompt to generate chord progression using our server-side proxy
   const generateProgression = async (): Promise<void> => {
     if (!prompt.trim()) {
       setError('Please enter a prompt first.');
-      return;
-    }
-
-    if (!apiKey.trim()) {
-      setShowApiKeyInput(true);
-      setError('Please enter your Anthropic API key.');
       return;
     }
 
@@ -181,83 +167,27 @@ const ChordProgressionGenerator: React.FC = () => {
     setError('');
     
     try {
-      // Call Anthropic API to generate chord progression
-      const progressionData = await getChordProgressionFromAnthropic(prompt, apiKey);
+      // Call our server-side proxy
+      const response = await fetch(`${serverUrl}/api/generate-progression`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to get response from server');
+      }
+
+      const progressionData = await response.json();
       setProgression(progressionData);
       setIsGenerating(false);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       setError(`Error: ${errorMessage}`);
       setIsGenerating(false);
-    }
-  };
-
-  // Call Anthropic API to generate a chord progression
-  const getChordProgressionFromAnthropic = async (userPrompt: string, key: string): Promise<ChordProgression> => {
-    const systemPrompt = `You are a music theory expert that creates chord progressions based on user requests. 
-    For the given prompt, create a chord progression with the following JSON structure:
-    {
-      "key": "C", // The musical key (e.g., "C", "D minor", "F# major")
-      "style": "jazz", // The musical style (e.g., "jazz", "rock", "pop", "blues", "folk", "classical")
-      "bpm": 120, // Beats per minute (tempo)
-      "bars": 4, // Number of bars in the progression
-      "chords": ["Cmaj7", "Dm7", "G7", "Cmaj7"] // Array of chord names (use proper music notation)
-    }
-    
-    Parse the user's request carefully for key, style, and tempo information. If the user doesn't specify, use appropriate defaults.
-    Use proper chord notation (e.g., "Cmaj7", "D7", "Em", "F#dim").
-    Create musically interesting and appropriate progressions for the requested style.
-    Only return the valid JSON object with no additional text or explanation.`;
-
-    try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': key,
-          'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-          model: 'claude-3-haiku-20240307',
-          system: systemPrompt,
-          messages: [
-            {
-              role: 'user',
-              content: userPrompt
-            }
-          ],
-          max_tokens: 1000
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Failed to get response from Anthropic API');
-      }
-
-      const data = await response.json();
-      
-      if (!data.content || !data.content[0]?.text) {
-        throw new Error('Invalid response format from Anthropic API');
-      }
-      
-      const progressionString = data.content[0].text;
-      
-      try {
-        // Try to parse the JSON response
-        const progressionData = JSON.parse(progressionString) as ChordProgression;
-        return progressionData;
-      } catch (parseError) {
-        // If JSON parsing fails, try to extract JSON using regex
-        const jsonMatch = progressionString.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          return JSON.parse(jsonMatch[0]) as ChordProgression;
-        }
-        throw new Error('Could not parse chord progression data from API response');
-      }
-    } catch (error) {
-      console.error('API Error:', error);
-      throw new Error(`API request failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
@@ -673,27 +603,6 @@ const ChordProgressionGenerator: React.FC = () => {
           </button>
         </div>
         {error && <p style={styles.errorText}>{error}</p>}
-      </div>
-      
-      {/* API Key input section */}
-      <div style={{
-        ...styles.apiKeyContainer,
-        display: showApiKeyInput ? 'block' : 'none'
-      }}>
-        <label style={styles.label} htmlFor="apiKey">
-          Enter your Anthropic API Key
-        </label>
-        <input
-          style={{...styles.input, width: '100%', borderRadius: '0.375rem'}}
-          type="password"
-          id="apiKey"
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-          placeholder="sk-ant-api..."
-        />
-        <p style={{fontSize: '0.75rem', color: '#6b7280', marginTop: '0.5rem'}}>
-          Your API key is used only for this request and not stored on our servers.
-        </p>
       </div>
       
       {progression && (
