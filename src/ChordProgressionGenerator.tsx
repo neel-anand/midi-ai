@@ -9,130 +9,263 @@ interface ChordProgression {
   chords: string[];
 }
 
-// Simple CSS styles for the component without Tailwind
+// Modern CSS styles for the component
 const styles = {
   container: {
     display: 'flex',
     flexDirection: 'column' as const,
     alignItems: 'center',
-    padding: '1.5rem',
-    maxWidth: '48rem',
-    margin: '0 auto',
-    backgroundColor: 'white',
-    borderRadius: '0.5rem',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+    padding: '2rem',
+    width: '100vw',
+    minHeight: '100vh',
+    margin: '0',
+    backgroundColor: '#0f172a', // Very dark blue background
+    background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%), radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.15) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.15) 0%, transparent 50%)', // Gradient background with subtle light spots
+    color: '#f3f4f6', // Light text
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+    boxSizing: 'border-box' as const,
+    overflow: 'hidden',
+    position: 'relative' as const,
   },
   title: {
-    fontSize: '1.875rem',
-    fontWeight: 'bold',
-    marginBottom: '1.5rem',
-    color: '#1f2937'
+    fontSize: '2.25rem',
+    fontWeight: '700',
+    marginBottom: '2rem',
+    background: 'linear-gradient(90deg, #3b82f6, #10b981)', // Blue to green gradient
+    backgroundClip: 'text',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    color: 'transparent',
+    textAlign: 'center' as const
   },
   section: {
     width: '100%',
-    marginBottom: '1.5rem'
+    maxWidth: '56rem',
+    marginBottom: '2rem',
+    backdropFilter: 'blur(8px)',
+    padding: '1.5rem',
+    borderRadius: '0.75rem',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.1)'
   },
   label: {
     display: 'block',
-    fontSize: '0.875rem',
+    fontSize: '1rem',
     fontWeight: '500',
-    color: '#374151',
-    marginBottom: '0.5rem'
+    color: '#a5b4fc', // Light indigo
+    marginBottom: '0.75rem',
+    letterSpacing: '0.025em'
   },
   inputContainer: {
-    display: 'flex'
+    display: 'flex',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
   },
   input: {
     flexGrow: 1,
-    padding: '0.5rem 1rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '0.375rem 0 0 0.375rem',
-    outline: 'none'
+    padding: '0.75rem 1.25rem',
+    border: 'none',
+    borderRadius: '0.5rem 0 0 0.5rem',
+    outline: 'none',
+    backgroundColor: '#1f2937', // Darker shade
+    color: '#f9fafb', // Light text
+    fontSize: '1rem',
+    transition: 'all 0.2s ease'
   },
   button: {
-    padding: '0.5rem 1rem',
-    backgroundColor: '#2563eb',
+    padding: '0.75rem 1.5rem',
+    backgroundColor: '#3b82f6', // Blue
     color: 'white',
-    borderRadius: '0 0.375rem 0.375rem 0',
+    borderRadius: '0 0.5rem 0.5rem 0',
     border: 'none',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    fontWeight: '600',
+    transition: 'all 0.2s ease',
+    boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
   },
   errorText: {
-    marginTop: '0.5rem',
+    marginTop: '0.75rem',
     fontSize: '0.875rem',
-    color: '#dc2626'
+    color: '#ef4444',
+    padding: '0.5rem',
+    borderRadius: '0.25rem',
+    backgroundColor: 'rgba(239, 68, 68, 0.1)'
   },
   progressionContainer: {
     width: '100%',
-    backgroundColor: '#f9fafb',
-    padding: '1rem',
-    borderRadius: '0.5rem',
-    marginBottom: '1.5rem'
+    maxWidth: '56rem',
+    backgroundColor: 'rgba(31, 41, 55, 0.7)', // Darker with transparency
+    padding: '1.5rem',
+    borderRadius: '0.75rem',
+    marginBottom: '2rem',
+    backdropFilter: 'blur(12px)',
+    border: '1px solid rgba(75, 85, 99, 0.2)',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
   },
   progressionTitle: {
-    fontSize: '1.25rem',
-    fontWeight: '500',
-    marginBottom: '0.5rem',
-    color: '#1f2937'
+    fontSize: '1.5rem',
+    fontWeight: '600',
+    marginBottom: '1rem',
+    color: '#a5b4fc', // Light indigo
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem'
   },
   flexRow: {
     display: 'flex',
     flexDirection: 'row' as const,
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: '1rem'
+    gap: '1.5rem',
+    flexWrap: 'wrap' as const
   },
   flexCol: {
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: '0.5rem'
+    gap: '0.75rem'
   },
   propertyLabel: {
-    fontWeight: '500'
+    fontWeight: '500',
+    color: '#a5b4fc', // Light indigo
+    letterSpacing: '0.025em',
+    marginRight: '0.5rem'
+  },
+  propertyValue: {
+    fontWeight: '400',
+    color: '#f3f4f6' // Light gray
+  },
+  chordsList: {
+    display: 'flex',
+    flexWrap: 'wrap' as const,
+    gap: '0.5rem',
+    marginTop: '0.5rem'
+  },
+  chordPill: {
+    padding: '0.35rem 0.75rem',
+    borderRadius: '2rem',
+    backgroundColor: 'rgba(59, 130, 246, 0.2)', // Blue with transparency
+    border: '1px solid rgba(59, 130, 246, 0.3)',
+    color: '#93c5fd', // Light blue
+    fontSize: '0.875rem',
+    fontWeight: '500',
+    letterSpacing: '0.025em'
   },
   buttonGroup: {
     display: 'flex',
-    gap: '0.5rem'
+    gap: '0.75rem',
+    marginTop: '1rem'
+  },
+  iconButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    fontWeight: '600',
+    transition: 'all 0.2s ease',
+    padding: '0.75rem 1.25rem',
+    borderRadius: '0.5rem',
+    border: 'none',
+    cursor: 'pointer'
   },
   previewButton: {
-    padding: '0.5rem 1rem',
-    backgroundColor: '#10b981',
+    backgroundColor: '#10b981', // Green
     color: 'white',
-    borderRadius: '0.375rem',
+    boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)',
+    padding: '0.75rem 1.25rem',
+    borderRadius: '0.5rem',
     border: 'none',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    fontWeight: '600',
+    transition: 'all 0.2s ease',
+  },
+  previewButtonHover: {
+    backgroundColor: '#059669', // Darker green
+    transform: 'translateY(-2px)',
+    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)'
   },
   stopButton: {
-    padding: '0.5rem 1rem',
-    backgroundColor: '#4b5563',
+    backgroundColor: '#6b7280', // Gray
     color: 'white',
-    borderRadius: '0.375rem',
+    boxShadow: '0 2px 8px rgba(107, 114, 128, 0.3)',
+    padding: '0.75rem 1.25rem',
+    borderRadius: '0.5rem',
     border: 'none',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    fontWeight: '600',
+    transition: 'all 0.2s ease',
+  },
+  stopButtonHover: {
+    backgroundColor: '#4b5563', // Darker gray
+    transform: 'translateY(-2px)',
+    boxShadow: '0 4px 12px rgba(107, 114, 128, 0.4)'
   },
   downloadButton: {
-    padding: '0.5rem 1rem',
-    backgroundColor: '#2563eb',
+    backgroundColor: '#3b82f6', // Blue
     color: 'white',
-    borderRadius: '0.375rem',
+    boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)',
+    padding: '0.75rem 1.25rem',
+    borderRadius: '0.5rem',
     border: 'none',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    fontWeight: '600',
+    transition: 'all 0.2s ease',
+  },
+  downloadButtonHover: {
+    backgroundColor: '#2563eb', // Darker blue
+    transform: 'translateY(-2px)',
+    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.4)'
   },
   fileNameInput: {
-    padding: '0.25rem 0.5rem',
+    padding: '0.5rem 0.75rem',
     fontSize: '0.875rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '0.25rem',
-    outline: 'none'
+    border: 'none',
+    borderRadius: '0.375rem',
+    backgroundColor: '#1f2937', // Darker shade
+    color: '#f9fafb',
+    outline: 'none',
+    transition: 'all 0.2s ease'
+  },
+  fileInputContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    backgroundColor: 'rgba(31, 41, 55, 0.5)',
+    padding: '0.5rem 0.75rem',
+    borderRadius: '0.375rem'
+  },
+  fileNameLabel: {
+    fontSize: '0.875rem',
+    color: '#9ca3af' // Gray
+  },
+  fileExtension: {
+    fontSize: '0.875rem',
+    color: '#9ca3af' // Gray
   },
   tipsContainer: {
     width: '100%',
+    maxWidth: '56rem',
     fontSize: '0.875rem',
-    color: '#4b5563'
+    color: '#9ca3af', // Gray
+    backgroundColor: 'rgba(31, 41, 55, 0.5)',
+    padding: '1.25rem',
+    borderRadius: '0.75rem',
+    borderLeft: '4px solid #3b82f6' // Blue accent
+  },
+  tipsTitle: {
+    fontWeight: '600',
+    fontSize: '1rem',
+    marginBottom: '0.75rem',
+    color: '#a5b4fc', // Light indigo
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem'
   },
   tipsList: {
     paddingLeft: '1.25rem',
-    listStyleType: 'disc' as const
+    listStyleType: 'disc' as const,
+    lineHeight: '1.6'
+  },
+  tipItem: {
+    marginBottom: '0.5rem'
   }
 };
 
@@ -143,6 +276,11 @@ const ChordProgressionGenerator: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [fileName, setFileName] = useState<string>('chord-progression');
+  const [hoverStates, setHoverStates] = useState({
+    preview: false,
+    download: false,
+    generate: false
+  });
   const synth = useRef<Tone.PolySynth | null>(null);
   const part = useRef<Tone.Part | null>(null);
 
@@ -523,17 +661,57 @@ const ChordProgressionGenerator: React.FC = () => {
       
       // 9th chords (common in jazz)
       'C9': ['C3', 'E3', 'G3', 'Bb3', 'D4'],
+      'C#9': ['C#3', 'F3', 'G#3', 'B3', 'D#4'],
+      'Db9': ['Db3', 'F3', 'Ab3', 'B3', 'Eb4'], // Enharmonic with C#9
       'D9': ['D3', 'F#3', 'A3', 'C4', 'E4'],
+      'D#9': ['D#3', 'G3', 'A#3', 'C#4', 'F4'],
+      'Eb9': ['Eb3', 'G3', 'Bb3', 'Db4', 'F4'], // Enharmonic with D#9
+      'E9': ['E3', 'G#3', 'B3', 'D4', 'F#4'],
       'F9': ['F3', 'A3', 'C4', 'Eb4', 'G4'],
+      'F#9': ['F#3', 'A#3', 'C#4', 'E4', 'G#4'],
+      'Gb9': ['Gb3', 'Bb3', 'Db4', 'E4', 'Ab4'], // Enharmonic with F#9
       'G9': ['G3', 'B3', 'D4', 'F4', 'A4'],
-      'Bb9': ['Bb3', 'D4', 'F4', 'Ab4', 'C5'],
+      'G#9': ['G#3', 'C4', 'D#4', 'F#4', 'A#4'],
+      'Ab9': ['Ab3', 'C4', 'Eb4', 'Gb4', 'Bb4'], // Enharmonic with G#9
+      'A9': ['A3', 'C#4', 'E4', 'G4', 'B4'],
+      'A#9': ['A#3', 'D4', 'F4', 'G#4', 'C5'],
+      'Bb9': ['Bb3', 'D4', 'F4', 'Ab4', 'C5'], // Enharmonic with A#9
+      'B9': ['B3', 'D#4', 'F#4', 'A4', 'C#5'],
+      
+      // Major 9th chords
+      'Cmaj9': ['C3', 'E3', 'G3', 'B3', 'D4'],
+      'C#maj9': ['C#3', 'F3', 'G#3', 'C4', 'D#4'],
+      'Dbmaj9': ['Db3', 'F3', 'Ab3', 'C4', 'Eb4'], // Enharmonic with C#maj9
+      'Dmaj9': ['D3', 'F#3', 'A3', 'C#4', 'E4'],
+      'Ebmaj9': ['Eb3', 'G3', 'Bb3', 'D4', 'F4'],
+      'Emaj9': ['E3', 'G#3', 'B3', 'D#4', 'F#4'],
+      'Fmaj9': ['F3', 'A3', 'C4', 'E4', 'G4'],
+      'F#maj9': ['F#3', 'A#3', 'C#4', 'F4', 'G#4'],
+      'Gbmaj9': ['Gb3', 'Bb3', 'Db4', 'F4', 'Ab4'], // Enharmonic with F#maj9
+      'Gmaj9': ['G3', 'B3', 'D4', 'F#4', 'A4'],
+      'Abmaj9': ['Ab3', 'C4', 'Eb4', 'G4', 'Bb4'],
+      'Amaj9': ['A3', 'C#4', 'E4', 'G#4', 'B4'],
+      'Bbmaj9': ['Bb3', 'D4', 'F4', 'A4', 'C5'],
+      'Bmaj9': ['B3', 'D#4', 'F#4', 'A#4', 'C#5'],
       
       // Minor 9th chords
       'Cm9': ['C3', 'Eb3', 'G3', 'Bb3', 'D4'],
+      'C#m9': ['C#3', 'E3', 'G#3', 'B3', 'D#4'],
+      'Dbm9': ['Db3', 'E3', 'Ab3', 'B3', 'Eb4'], // Enharmonic with C#m9
       'Dm9': ['D3', 'F3', 'A3', 'C4', 'E4'],
+      'D#m9': ['D#3', 'F#3', 'A#3', 'C#4', 'F4'],
+      'Ebm9': ['Eb3', 'Gb3', 'Bb3', 'Db4', 'F4'], // Enharmonic with D#m9
       'Em9': ['E3', 'G3', 'B3', 'D4', 'F#4'],
+      'Fm9': ['F3', 'Ab3', 'C4', 'Eb4', 'G4'],
+      'F#m9': ['F#3', 'A3', 'C#4', 'E4', 'G#4'],
+      'Gbm9': ['Gb3', 'A3', 'Db4', 'E4', 'Ab4'], // Enharmonic with F#m9
       'Gm9': ['G3', 'Bb3', 'D4', 'F4', 'A4'],
-      'Am9': ['A3', 'C4', 'E4', 'G4', 'B4']
+      'G#m9': ['G#3', 'B3', 'D#4', 'F#4', 'A#4'],
+      'Abm9': ['Ab3', 'B3', 'Eb4', 'Gb4', 'Bb4'], // Enharmonic with G#m9
+      'Am9': ['A3', 'C4', 'E4', 'G4', 'B4'],
+      'A#m9': ['A#3', 'C#4', 'F4', 'G#4', 'C5'],
+      'Bbm9': ['Bb3', 'Db4', 'F4', 'Ab4', 'C5'], // Enharmonic with A#m9
+      'Bm9': ['B3', 'D4', 'F#4', 'A4', 'C#5']
     };
     
     // Try to match the chord in the map directly
@@ -558,37 +736,92 @@ const ChordProgressionGenerator: React.FC = () => {
     
     // Map of normalized chord types to standard chord types
     const chordTypeMap: Record<string, string> = {
+      // Major triads
       'maj': '',          // Major triad
       'major': '',        // Major triad
+      'M': '',            // Major triad
+      
+      // Minor triads
       'min': 'm',         // Minor triad
       'minor': 'm',       // Minor triad
+      'm': 'm',           // Minor triad
+      '-': 'm',           // Minor triad (alternate notation)
+      
+      // Half-diminished
       'm7b5': 'm7b5',     // Half-diminished
       'ø': 'm7b5',        // Half-diminished
+      'min7b5': 'm7b5',   // Half-diminished
+      '-7b5': 'm7b5',     // Half-diminished
+      
+      // Diminished triads
       'dim': 'dim',       // Diminished
-      'dim7': 'dim7',     // Diminished 7th
       '°': 'dim',         // Diminished
+      'o': 'dim',         // Diminished (alternate notation)
+      
+      // Diminished 7th
+      'dim7': 'dim7',     // Diminished 7th
       '°7': 'dim7',       // Diminished 7th
+      'o7': 'dim7',       // Diminished 7th
+      
+      // Augmented triads
       'aug': 'aug',       // Augmented
       '+': 'aug',         // Augmented
+      'aug5': 'aug',      // Augmented
+      
+      // Dominant 7th
       '7': '7',           // Dominant 7th
       'dom7': '7',        // Dominant 7th
+      'dominant7': '7',   // Dominant 7th
+      
+      // Major 7th
       'maj7': 'maj7',     // Major 7th
       'major7': 'maj7',   // Major 7th
+      'M7': 'maj7',       // Major 7th
       'Δ': 'maj7',        // Major 7th
       'Δ7': 'maj7',       // Major 7th
+      
+      // Minor 7th
       'm7': 'm7',         // Minor 7th
       'min7': 'm7',       // Minor 7th
       'minor7': 'm7',     // Minor 7th
+      '-7': 'm7',         // Minor 7th
+      
+      // Suspended chords
       'sus2': 'sus2',     // Suspended 2nd
       'sus4': 'sus4',     // Suspended 4th
       'sus': 'sus4',      // Suspended 4th (default)
+      
+      // 6th chords
       '6': '6',           // Major 6th
+      'maj6': '6',        // Major 6th
+      'major6': '6',      // Major 6th
+      'M6': '6',          // Major 6th
+      
+      // Minor 6th chords
       'm6': 'm6',         // Minor 6th
       'min6': 'm6',       // Minor 6th
+      'minor6': 'm6',     // Minor 6th
+      '-6': 'm6',         // Minor 6th
+      
+      // Add9 chords
       'add9': 'add9',     // Add 9th
+      '2': 'add9',        // Add 9th (simplified notation)
+      
+      // Dominant 9th
       '9': '9',           // Dominant 9th
+      'dom9': '9',        // Dominant 9th
+      'dominant9': '9',   // Dominant 9th
+      
+      // Major 9th
+      'maj9': 'maj9',     // Major 9th
+      'major9': 'maj9',   // Major 9th
+      'M9': 'maj9',       // Major 9th
+      
+      // Minor 9th
       'm9': 'm9',         // Minor 9th
-      'min9': 'm9'        // Minor 9th
+      'min9': 'm9',       // Minor 9th
+      'minor9': 'm9',     // Minor 9th
+      '-9': 'm9'          // Minor 9th
     };
     
     // Try to match the chord type
@@ -685,205 +918,131 @@ const ChordProgressionGenerator: React.FC = () => {
       return new Uint8Array();
     }
     
-    // MIDI header (MThd chunk)
-    const header = [
-      0x4D, 0x54, 0x68, 0x64, // "MThd"
-      0x00, 0x00, 0x00, 0x06, // Header length (always 6 bytes)
-      0x00, 0x01, // Format 1 (multiple tracks)
-      0x00, 0x02, // Two tracks (tempo track + chord track)
-      0x00, 0x60  // Division: 96 ticks per quarter note (0x60 = 96)
-    ];
+    // Super-simple MIDI file with just the basics
+    // Based on format 0 (single track)
     
-    // First track - tempo and time signature (from reference file)
-    const tempoTrackEvents: number[] = [];
+    // Log for debugging
+    console.log(`Creating MIDI for ${progression.chords.length} chords: ${progression.chords.join(', ')}`);
     
-    // Set tempo (in microseconds per quarter note)
-    const microsecondsPerBeat = Math.round(60000000 / progression.bpm);
-    tempoTrackEvents.push(
-      0x00, // Delta time (immediate)
-      0xFF, 0x51, 0x03, // Tempo meta event
-      (microsecondsPerBeat >> 16) & 0xFF,
-      (microsecondsPerBeat >> 8) & 0xFF,
-      microsecondsPerBeat & 0xFF
-    );
+    // Build event list first (all events with timestamps)
+    interface MidiEvent {
+      deltaTime: number;
+      bytes: number[];
+    }
     
-    // Set time signature (4/4)
-    tempoTrackEvents.push(
-      0x00, // Delta time
-      0xFF, 0x58, 0x04, // Time signature meta event
-      0x04, // Numerator (4)
-      0x02, // Denominator (4 = 2^2)
-      0x18, // Clocks per metronome click (24)
-      0x08  // 32nd notes per quarter note (8)
-    );
+    // Store all events in order
+    const events: MidiEvent[] = [];
     
-    // End of track marker
-    tempoTrackEvents.push(
-      0x00, // Delta time
-      0xFF, 0x2F, 0x00 // End of track meta event
-    );
-    
-    // Tempo track byte length needs to be calculated to create the header
-    // Create a temp array to calculate total length
-    const tempoTrackArray = new Uint8Array(tempoTrackEvents);
-    const tempoTrackSize = tempoTrackArray.length;
-    
-    // Create tempo track chunk
-    const tempoTrackHeader = [
-      0x4D, 0x54, 0x72, 0x6B, // "MTrk"
-      (tempoTrackSize >> 24) & 0xFF,
-      (tempoTrackSize >> 16) & 0xFF,
-      (tempoTrackSize >> 8) & 0xFF,
-      tempoTrackSize & 0xFF  // Track length in bytes
-    ];
-    
-    // Second track - chord progression
-    const chordTrackEvents: number[] = [];
-    
-    // Set track name
-    const trackName = `Omnisphere 1`; // From reference file
-    chordTrackEvents.push(
-      0x00, // Delta time
-      0xFF, 0x03, trackName.length, // Track name meta event
-      ...trackName.split('').map(c => c.charCodeAt(0)) // Track name as bytes
-    );
+    // Standard MIDI header metadata
+    events.push({ deltaTime: 0, bytes: [0xFF, 0x51, 0x03, 0x07, 0xA1, 0x20] }); // Tempo (500,000 µs per quarter note = 120 BPM)
+    events.push({ deltaTime: 0, bytes: [0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08] }); // Time signature 4/4
+    events.push({ deltaTime: 0, bytes: [0xC0, 0x00] }); // Program change to piano
     
     // Calculate timing
-    const ticksPerBeat = 96; // Based on the header division value
-    const beatsPerChord = 4; // One bar per chord (in 4/4 time)
-    const ticksPerChord = beatsPerChord * ticksPerBeat;
+    const TICKS_PER_BEAT = 96;
+    const BEATS_PER_BAR = 4;
+    const TICKS_PER_BAR = TICKS_PER_BEAT * BEATS_PER_BAR;
     
-    // Add each chord - based on reference MIDI
-    progression.chords.forEach((chord, index) => {
-      // Get the basic chord notes
+    // Process each chord
+    for (let i = 0; i < progression.chords.length; i++) {
+      const chord = progression.chords[i];
+      console.log(`Processing chord ${i+1}: ${chord}`);
+      
+      // Get notes for this chord
       const notes = chordToNotes(chord);
       const midiNotes = notes.map(noteToMidiNumber);
       
-      // Add additional "color" notes like in the reference
-      // Create bass notes, melody notes, and other embellishments
-      const bassNote = midiNotes[0] - 12; // One octave lower
-      const melodyNotes = [
-        midiNotes[midiNotes.length - 1] + 5, // Higher melody note
-        midiNotes[midiNotes.length - 1] + 7  // Another melody note
-      ];
+      // Add bass note
+      const bassNote = midiNotes[0] - 12;
+      const allNotes = [bassNote, ...midiNotes];
       
-      // Combine all notes
-      const allNotes = [
-        bassNote,       // Bass note
-        ...midiNotes,   // Main chord notes
-        ...melodyNotes  // Melody/embellishment notes
-      ];
+      // Calculate the start time for this chord (in ticks)
+      const chordStartTime = i * TICKS_PER_BAR;
       
-      // Note velocities as observed in reference (varying by note type)
-      const velocities = [
-        71,   // Bass note - medium velocity
-        40,   // Root note - softer
-        109,  // Middle note - louder
-        94,   // Middle/high note
-        79,   // High note
-        72,   // Extra note 1 (if any)
-        105   // Extra note 2 (if any)
-      ];
-      
-      // Start all chord notes with slight timing differences for more natural sound
+      // Note-on events for each note in chord
       allNotes.forEach((note, noteIndex) => {
-        // For the first note or start of a new chord
-        if (noteIndex === 0 && index > 0) {
-          // Add a small delay between chords (about 1/8 note)
-          const delayBetweenChords = Math.round(ticksPerBeat / 8);
-          const delayBytes = encodeVariableLength(delayBetweenChords);
-          delayBytes.forEach(byte => chordTrackEvents.push(byte));
-        } else if (noteIndex === 0) {
-          // First chord, first note - no delay
-          chordTrackEvents.push(0x00);
-        } else {
-          // Slight arpeggio effect between notes in the same chord (1-5 ticks)
-          const arpDelay = 1 + Math.floor(Math.random() * 5);
-          const arpDelayBytes = encodeVariableLength(arpDelay);
-          arpDelayBytes.forEach(byte => chordTrackEvents.push(byte));
-        }
+        // Slight arpeggio effect (1-3 ticks between notes)
+        const noteStartTime = chordStartTime + noteIndex;
         
-        // Get velocity or use default
-        const velocity = noteIndex < velocities.length ? 
-          velocities[noteIndex] : 
-          70 + Math.floor(Math.random() * 20); // Random velocity between 70-90
-        
-        chordTrackEvents.push(
-          0x90, // Note On, channel 0
-          note, // Note number
-          velocity > 127 ? 127 : velocity // Cap velocity at 127
-        );
+        // Note-on with different velocities based on note position
+        const velocity = noteIndex === 0 ? 80 : (noteIndex === 1 ? 100 : 90);
+        events.push({ 
+          deltaTime: noteStartTime, 
+          bytes: [0x90, note, velocity]  // Note-on, channel 0, note, velocity
+        });
       });
       
-      // Note Off events - based on reference patterns
-      // Note durations observed in reference (in ticks)
-      const noteDurations = [
-        29,  // Bass note - shorter
-        32,  // Root - medium
-        32,  // Third - medium
-        32,  // Fifth - medium
-        32,  // Seventh - medium
-        20,  // Melody note 1 - shorter
-        12   // Melody note 2 - shortest
-      ];
-      
-      // Each note has individual timing for ending
-      allNotes.forEach((note, noteIndex) => {
-        // Base duration from reference or default duration
-        const baseNoteDuration = (noteIndex < noteDurations.length) ? 
-          noteDurations[noteIndex] : ticksPerBeat;
-        
-        // Add slight randomization for more natural sound
-        const randomFactor = 0.95 + Math.random() * 0.1; // 0.95-1.05
-        const deltaTime = Math.round(baseNoteDuration * randomFactor);
-        const deltaBytes = encodeVariableLength(deltaTime);
-        
-        // Add the delta time
-        deltaBytes.forEach(byte => chordTrackEvents.push(byte));
-        
-        chordTrackEvents.push(
-          0x80, // Note Off, channel 0
-          note, // Note number
-          0x40  // Release velocity
-        );
+      // Note-off events for each note
+      allNotes.forEach(note => {
+        // All notes end just before next chord (99% of bar)
+        const noteEndTime = chordStartTime + TICKS_PER_BAR - 1;
+        events.push({ 
+          deltaTime: noteEndTime, 
+          bytes: [0x80, note, 0x40]  // Note-off, channel 0, note, release velocity
+        });
       });
-    });
+    }
     
-    // End of track marker
-    chordTrackEvents.push(
-      0x00, // Delta time
-      0xFF, 0x2F, 0x00 // End of track meta event
+    // Add end of track event
+    const totalDuration = progression.chords.length * TICKS_PER_BAR;
+    events.push({ deltaTime: totalDuration, bytes: [0xFF, 0x2F, 0x00] });
+    
+    // Sort events by time
+    events.sort((a, b) => a.deltaTime - b.deltaTime);
+    
+    // Convert absolute times to delta times
+    let previousTime = 0;
+    for (let i = 0; i < events.length; i++) {
+      const absoluteTime = events[i].deltaTime;
+      events[i].deltaTime = absoluteTime - previousTime;
+      previousTime = absoluteTime;
+    }
+    
+    // Build the MIDI file
+    const file: number[] = [];
+    
+    // MIDI header
+    file.push(
+      0x4D, 0x54, 0x68, 0x64,         // MThd
+      0x00, 0x00, 0x00, 0x06,         // Header length
+      0x00, 0x00,                     // Format 0
+      0x00, 0x01,                     // One track
+      0x00, 0x60                      // 96 PPQN
     );
     
-    // Chord track byte length needs to be calculated to create the header
-    // Create a temp array to calculate total length
-    const chordTrackArray = new Uint8Array(chordTrackEvents);
-    const chordTrackSize = chordTrackArray.length;
+    // Create track data first to calculate length
+    const trackData: number[] = [];
     
-    // Create chord track header
-    const chordTrackHeader = [
-      0x4D, 0x54, 0x72, 0x6B, // "MTrk"
-      (chordTrackSize >> 24) & 0xFF,
-      (chordTrackSize >> 16) & 0xFF,
-      (chordTrackSize >> 8) & 0xFF,
-      chordTrackSize & 0xFF  // Track length in bytes
-    ];
+    // Add all events with delta times
+    for (const event of events) {
+      // Encode delta time as variable length quantity
+      const deltaBytes = encodeVariableLength(event.deltaTime);
+      deltaBytes.forEach(byte => trackData.push(byte));
+      
+      // Add event bytes
+      event.bytes.forEach(byte => trackData.push(byte));
+    }
     
-    // Combine everything into a single array
-    const midiData = new Uint8Array([
-      ...header,
-      ...tempoTrackHeader,
-      ...tempoTrackEvents,
-      ...chordTrackHeader,
-      ...chordTrackEvents
-    ]);
+    // Add track header
+    file.push(
+      0x4D, 0x54, 0x72, 0x6B,         // MTrk
+      (trackData.length >> 24) & 0xFF, // Track length
+      (trackData.length >> 16) & 0xFF,
+      (trackData.length >> 8) & 0xFF,
+      trackData.length & 0xFF
+    );
     
-    return midiData;
+    // Add track data
+    trackData.forEach(byte => file.push(byte));
+    
+    console.log(`MIDI file created: ${file.length} bytes, ${progression.chords.length} chords`);
+    
+    return new Uint8Array(file);
   };
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Chord Progression Generator</h1>
+      <h1 style={styles.title}>MIDI.ai</h1>
       
       <div style={styles.section}>
         <label style={styles.label} htmlFor="prompt">
@@ -901,10 +1060,13 @@ const ChordProgressionGenerator: React.FC = () => {
           <button
             style={{
               ...styles.button,
-              opacity: isGenerating ? 0.7 : 1
+              opacity: isGenerating ? 0.7 : 1,
+              ...(hoverStates.generate && !isGenerating ? { backgroundColor: '#2563eb', transform: 'translateY(-2px)' } : {})
             }}
             onClick={generateProgression}
             disabled={isGenerating}
+            onMouseEnter={() => setHoverStates({...hoverStates, generate: true})}
+            onMouseLeave={() => setHoverStates({...hoverStates, generate: false})}
           >
             {isGenerating ? 'Generating...' : 'Generate'}
           </button>
@@ -914,43 +1076,71 @@ const ChordProgressionGenerator: React.FC = () => {
       
       {progression && (
         <div style={styles.progressionContainer}>
-          <h2 style={styles.progressionTitle}>Generated Progression</h2>
+          <h2 style={styles.progressionTitle}>
+            {/* Add a musical note icon using Unicode */}
+            <span role="img" aria-label="music">🎵</span> Generated Progression
+          </h2>
           <div style={styles.flexRow}>
-            <div>
-              <p><span style={styles.propertyLabel}>Key:</span> {progression.key}</p>
-              <p><span style={styles.propertyLabel}>Style:</span> {progression.style}</p>
-              <p><span style={styles.propertyLabel}>Tempo:</span> {progression.bpm} BPM</p>
-              <p><span style={styles.propertyLabel}>Chords:</span> {progression.chords.join(' - ')}</p>
+            <div style={styles.flexCol}>
+              <div style={{marginBottom: '1rem'}}>
+                <p><span style={styles.propertyLabel}>Key:</span> <span style={styles.propertyValue}>{progression.key}</span></p>
+                <p><span style={styles.propertyLabel}>Style:</span> <span style={styles.propertyValue}>{progression.style}</span></p>
+                <p><span style={styles.propertyLabel}>Tempo:</span> <span style={styles.propertyValue}>{progression.bpm} BPM</span></p>
+              </div>
+              
+              <div>
+                <span style={styles.propertyLabel}>Chords:</span>
+                <div style={styles.chordsList}>
+                  {progression.chords.map((chord, index) => (
+                    <span key={index} style={styles.chordPill}>{chord}</span>
+                  ))}
+                </div>
+              </div>
             </div>
             
             <div style={styles.flexCol}>
               <div style={styles.buttonGroup}>
                 <button
                   onClick={isPlaying ? stopPlayback : playProgression}
-                  style={isPlaying ? styles.stopButton : styles.previewButton}
+                  style={{
+                    ...styles.iconButton,
+                    ...(isPlaying ? styles.stopButton : styles.previewButton),
+                    ...(hoverStates.preview && !isPlaying ? styles.previewButtonHover : {}),
+                    ...(hoverStates.preview && isPlaying ? styles.stopButtonHover : {})
+                  }}
+                  onMouseEnter={() => setHoverStates({...hoverStates, preview: true})}
+                  onMouseLeave={() => setHoverStates({...hoverStates, preview: false})}
                 >
+                  {/* Audio icon using Unicode */}
+                  <span role="img" aria-hidden="true">{isPlaying ? '⏹️' : '▶️'}</span>
                   {isPlaying ? 'Stop' : 'Preview'}
                 </button>
                 
                 <button
                   onClick={downloadMidi}
-                  style={styles.downloadButton}
+                  style={{
+                    ...styles.iconButton,
+                    ...styles.downloadButton,
+                    ...(hoverStates.download ? styles.downloadButtonHover : {})
+                  }}
+                  onMouseEnter={() => setHoverStates({...hoverStates, download: true})}
+                  onMouseLeave={() => setHoverStates({...hoverStates, download: false})}
                 >
+                  {/* Download icon using Unicode */}
+                  <span role="img" aria-hidden="true">⬇️</span>
                   Download MIDI
                 </button>
               </div>
               
-              <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-                <label style={{fontSize: '0.875rem', color: '#4b5563'}}>
-                  File name:
-                </label>
+              <div style={styles.fileInputContainer}>
+                <span style={styles.fileNameLabel}>File name:</span>
                 <input
                   type="text"
                   value={fileName}
                   onChange={(e) => setFileName(e.target.value)}
                   style={styles.fileNameInput}
                 />
-                <span style={{fontSize: '0.875rem', color: '#4b5563'}}>.mid</span>
+                <span style={styles.fileExtension}>.mid</span>
               </div>
             </div>
           </div>
@@ -958,12 +1148,15 @@ const ChordProgressionGenerator: React.FC = () => {
       )}
       
       <div style={styles.tipsContainer}>
-        <h3 style={{fontWeight: '500', marginBottom: '0.25rem'}}>Usage Tips:</h3>
+        <h3 style={styles.tipsTitle}>
+          <span role="img" aria-label="lightbulb">💡</span> Usage Tips
+        </h3>
         <ul style={styles.tipsList}>
-          <li>Specify key: "in C major" or "in F# minor"</li>
-          <li>Include style: "jazz", "rock", "pop", "blues", "folk", "classical"</li>
-          <li>Set tempo: "120 BPM" or use "slow", "medium tempo", "fast"</li>
-          <li>Example: "A melancholic jazz progression in D minor at 90 BPM"</li>
+          <li style={styles.tipItem}><b>Key:</b> "in C major" or "in F# minor"</li>
+          <li style={styles.tipItem}><b>Style:</b> "jazz", "rock", "pop", "blues", "folk", "classical"</li>
+          <li style={styles.tipItem}><b>Mood:</b> "melancholic", "uplifting", "energetic", "calm", "dramatic"</li>
+          <li style={styles.tipItem}><b>Tempo:</b> "120 BPM" or use "slow", "medium tempo", "fast"</li>
+          <li style={styles.tipItem}><b>Example:</b> "A melancholic jazz progression in D minor at 90 BPM"</li>
         </ul>
       </div>
     </div>
