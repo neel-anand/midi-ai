@@ -421,117 +421,6 @@ const ChordProgressionGenerator: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
-  // Create MIDI file data
-  const createMidiFile = (): Uint8Array => {
-    if (!progression) {
-      return new Uint8Array();
-    }
-    
-    // MIDI file header (MThd)
-    const header = [
-      0x4D, 0x54, 0x68, 0x64, // "MThd"
-      0x00, 0x00, 0x00, 0x06, // Header length
-      0x00, 0x01, // Format 1
-      0x00, 0x01, // One track
-      0x01, 0x00  // Division (256 ticks per beat)
-    ];
-    
-    // MIDI track header (MTrk)
-    const trackHeader = [
-      0x4D, 0x54, 0x72, 0x6B // "MTrk"
-    ];
-    
-    // Create events array
-    const events: number[] = [];
-    
-    // Set tempo
-    const microsecondsPerBeat = Math.floor(60000000 / progression.bpm);
-    events.push(
-      0x00, // Delta time
-      0xFF, 0x51, 0x03, // Tempo meta event
-      (microsecondsPerBeat >> 16) & 0xFF,
-      (microsecondsPerBeat >> 8) & 0xFF,
-      microsecondsPerBeat & 0xFF
-    );
-    
-    // Set time signature
-    events.push(
-      0x00, // Delta time
-      0xFF, 0x58, 0x04, // Time signature meta event
-      0x04, // Numerator
-      0x02, // Denominator (2^2 = 4)
-      0x18, // Clocks per metronome click
-      0x08  // 32nd notes per quarter note
-    );
-    
-    // Set instrument (piano)
-    events.push(
-      0x00, // Delta time
-      0xC0, 0x00 // Program change, piano
-    );
-    
-    // Add notes for each chord
-    const ticksPerBeat = 256;
-    const beatsPerChord = (progression.bars * 4) / progression.chords.length;
-    const ticksPerChord = Math.floor(beatsPerChord * ticksPerBeat);
-    
-    progression.chords.forEach(chord => {
-      const notes = chordToNotes(chord);
-      
-      // Note on events
-      notes.forEach(note => {
-        const midiNote = noteToMidiNumber(note);
-        events.push(
-          0x00, // Delta time (all notes start together)
-          0x90, // Note on, channel 0
-          midiNote, // Note number
-          0x64  // Velocity (100)
-        );
-      });
-      
-      // Note off events
-      notes.forEach((note, index) => {
-        const midiNote = noteToMidiNumber(note);
-        const deltaTime = index === 0 ? ticksPerChord : 0;
-        
-        // Encode delta time (variable length)
-        const encodedDelta = encodeVariableLength(deltaTime);
-        events.push(...encodedDelta);
-        
-        events.push(
-          0x80, // Note off, channel 0
-          midiNote, // Note number
-          0x40  // Velocity (64)
-        );
-      });
-    });
-    
-    // End of track
-    events.push(
-      0x00, // Delta time
-      0xFF, 0x2F, 0x00 // End of track meta event
-    );
-    
-    // Calculate track length
-    const trackDataLength = events.length;
-    const trackLengthBytes = [
-      (trackDataLength >> 24) & 0xFF,
-      (trackDataLength >> 16) & 0xFF,
-      (trackDataLength >> 8) & 0xFF,
-      trackDataLength & 0xFF
-    ];
-    
-    // Combine all parts into a Uint8Array
-    const midiData = new Uint8Array([
-      ...header,
-      ...trackHeader,
-      ...trackLengthBytes,
-      ...events
-    ]);
-    
-    return midiData;
-  };
-  
   // Convert note name to MIDI note number
   const noteToMidiNumber = (noteName: string): number => {
     const noteMap: Record<string, number> = {
@@ -572,6 +461,126 @@ const ChordProgressionGenerator: React.FC = () => {
     }
     
     return result;
+  };
+
+  // Create MIDI file data
+  const createMidiFile = (): Uint8Array => {
+    if (!progression) {
+      return new Uint8Array();
+    }
+    
+    // Using standard MIDI file format
+    // MThd + <length of header data> + <format> + <number of tracks> + <division>
+    const header = [
+      0x4D, 0x54, 0x68, 0x64, // "MThd"
+      0x00, 0x00, 0x00, 0x06, // Header length (always 6 bytes)
+      0x00, 0x00, // Format 0 (single track)
+      0x00, 0x01, // One track
+      0x01, 0xE0  // Division: 480 ticks per quarter note
+    ];
+    
+    // Prepare all events for the track
+    const events: number[] = [];
+    
+    // Set tempo (in microseconds per quarter note)
+    const microsecondsPerBeat = Math.round(60000000 / progression.bpm);
+    events.push(
+      0x00, // Delta time (immediate)
+      0xFF, 0x51, 0x03, // Tempo meta event
+      (microsecondsPerBeat >> 16) & 0xFF,
+      (microsecondsPerBeat >> 8) & 0xFF,
+      microsecondsPerBeat & 0xFF
+    );
+    
+    // Set time signature (4/4)
+    events.push(
+      0x00, // Delta time
+      0xFF, 0x58, 0x04, // Time signature meta event
+      0x04, // Numerator (4)
+      0x02, // Denominator (4 = 2^2)
+      0x18, // Clocks per metronome click (24)
+      0x08  // 32nd notes per quarter note (8)
+    );
+    
+    // Set track name
+    const trackName = `${progression.style} in ${progression.key}`;
+    events.push(
+      0x00, // Delta time
+      0xFF, 0x03, trackName.length, // Track name meta event
+      ...trackName.split('').map(c => c.charCodeAt(0)) // Track name as bytes
+    );
+    
+    // Set instrument to Acoustic Grand Piano (program 0)
+    events.push(
+      0x00, // Delta time
+      0xC0, 0x00 // Program change, channel 0, program 0 (Piano)
+    );
+    
+    // Calculate timing
+    const ticksPerBeat = 480; // Standard MIDI resolution
+    const beatsPerChord = progression.bars * 4 / progression.chords.length;
+    const ticksPerChord = Math.round(beatsPerChord * ticksPerBeat);
+    
+    // Add each chord
+    let currentTime = 0;
+    
+    progression.chords.forEach((chord, index) => {
+      const notes = chordToNotes(chord);
+      const midiNotes = notes.map(noteToMidiNumber);
+      
+      // All notes in chord start simultaneously
+      midiNotes.forEach(note => {
+        events.push(
+          0x00, // Delta time (all notes in a chord start together)
+          0x90, // Note On, channel 0
+          note,  // Note number
+          0x50   // Velocity (moderate)
+        );
+      });
+      
+      // All notes in chord end simultaneously, but the next chord starts after ticksPerChord
+      midiNotes.forEach((note, noteIndex) => {
+        // For the first note of each chord, we include the delta time until the next chord
+        // For other notes, we use delta time 0 since they stop at the same time
+        if (noteIndex === 0) {
+          // Add the delta time
+          const encodedDelta = encodeVariableLength(ticksPerChord);
+          encodedDelta.forEach(byte => events.push(byte));
+        } else {
+          events.push(0x00); // No delay between note-offs in the same chord
+        }
+        
+        events.push(
+          0x80, // Note Off, channel 0
+          note,  // Note number
+          0x40   // Release velocity (does not really matter)
+        );
+      });
+    });
+    
+    // End of track marker
+    events.push(
+      0x00, // Delta time
+      0xFF, 0x2F, 0x00 // End of track meta event
+    );
+    
+    // Create track chunk
+    const trackHeader = [
+      0x4D, 0x54, 0x72, 0x6B, // "MTrk"
+      (events.length >> 24) & 0xFF,
+      (events.length >> 16) & 0xFF,
+      (events.length >> 8) & 0xFF,
+      events.length & 0xFF   // Track length in bytes
+    ];
+    
+    // Combine everything into a single array
+    const midiData = new Uint8Array([
+      ...header,
+      ...trackHeader,
+      ...events
+    ]);
+    
+    return midiData;
   };
 
   return (
