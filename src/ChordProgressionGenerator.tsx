@@ -918,32 +918,12 @@ const ChordProgressionGenerator: React.FC = () => {
       return new Uint8Array();
     }
     
-    // Super-simple MIDI file with just the basics
-    // Based on format 0 (single track)
-    
-    // Log for debugging
     console.log(`Creating MIDI for ${progression.chords.length} chords: ${progression.chords.join(', ')}`);
     
-    // Build event list first (all events with timestamps)
-    interface MidiEvent {
-      deltaTime: number;
-      bytes: number[];
-    }
+    // Calculate all chord notes first
+    const chordNotes: number[][] = [];
     
-    // Store all events in order
-    const events: MidiEvent[] = [];
-    
-    // Standard MIDI header metadata
-    events.push({ deltaTime: 0, bytes: [0xFF, 0x51, 0x03, 0x07, 0xA1, 0x20] }); // Tempo (500,000 µs per quarter note = 120 BPM)
-    events.push({ deltaTime: 0, bytes: [0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08] }); // Time signature 4/4
-    events.push({ deltaTime: 0, bytes: [0xC0, 0x00] }); // Program change to piano
-    
-    // Calculate timing
-    const TICKS_PER_BEAT = 96;
-    const BEATS_PER_BAR = 4;
-    const TICKS_PER_BAR = TICKS_PER_BEAT * BEATS_PER_BAR;
-    
-    // Process each chord
+    // Process each chord in the progression
     for (let i = 0; i < progression.chords.length; i++) {
       const chord = progression.chords[i];
       console.log(`Processing chord ${i+1}: ${chord}`);
@@ -952,92 +932,105 @@ const ChordProgressionGenerator: React.FC = () => {
       const notes = chordToNotes(chord);
       const midiNotes = notes.map(noteToMidiNumber);
       
-      // Add bass note
+      // Add bass note one octave lower
       const bassNote = midiNotes[0] - 12;
       const allNotes = [bassNote, ...midiNotes];
       
-      // Calculate the start time for this chord (in ticks)
-      const chordStartTime = i * TICKS_PER_BAR;
-      
-      // Note-on events for each note in chord
-      allNotes.forEach((note, noteIndex) => {
-        // Slight arpeggio effect (1-3 ticks between notes)
-        const noteStartTime = chordStartTime + noteIndex;
-        
-        // Note-on with different velocities based on note position
-        const velocity = noteIndex === 0 ? 80 : (noteIndex === 1 ? 100 : 90);
-        events.push({ 
-          deltaTime: noteStartTime, 
-          bytes: [0x90, note, velocity]  // Note-on, channel 0, note, velocity
-        });
-      });
-      
-      // Note-off events for each note
-      allNotes.forEach(note => {
-        // All notes end just before next chord (99% of bar)
-        const noteEndTime = chordStartTime + TICKS_PER_BAR - 1;
-        events.push({ 
-          deltaTime: noteEndTime, 
-          bytes: [0x80, note, 0x40]  // Note-off, channel 0, note, release velocity
-        });
-      });
+      // Store all notes for this chord
+      chordNotes.push(allNotes);
     }
     
-    // Add end of track event
-    const totalDuration = progression.chords.length * TICKS_PER_BAR;
-    events.push({ deltaTime: totalDuration, bytes: [0xFF, 0x2F, 0x00] });
+    // Start building the MIDI file directly as a byte array
+    const bytes: number[] = [];
     
-    // Sort events by time
-    events.sort((a, b) => a.deltaTime - b.deltaTime);
+    // === MIDI Header ===
+    bytes.push(0x4D, 0x54, 0x68, 0x64);  // "MThd" chunk type
+    bytes.push(0x00, 0x00, 0x00, 0x06);  // Header length
+    bytes.push(0x00, 0x00);              // Format 0 (single track)
+    bytes.push(0x00, 0x01);              // One track
+    bytes.push(0x00, 0x60);              // Division: 96 ticks per quarter note
     
-    // Convert absolute times to delta times
-    let previousTime = 0;
-    for (let i = 0; i < events.length; i++) {
-      const absoluteTime = events[i].deltaTime;
-      events[i].deltaTime = absoluteTime - previousTime;
-      previousTime = absoluteTime;
-    }
-    
-    // Build the MIDI file
-    const file: number[] = [];
-    
-    // MIDI header
-    file.push(
-      0x4D, 0x54, 0x68, 0x64,         // MThd
-      0x00, 0x00, 0x00, 0x06,         // Header length
-      0x00, 0x00,                     // Format 0
-      0x00, 0x01,                     // One track
-      0x00, 0x60                      // 96 PPQN
-    );
-    
-    // Create track data first to calculate length
+    // === Track chunk data ===
     const trackData: number[] = [];
     
-    // Add all events with delta times
-    for (const event of events) {
-      // Encode delta time as variable length quantity
-      const deltaBytes = encodeVariableLength(event.deltaTime);
-      deltaBytes.forEach(byte => trackData.push(byte));
-      
-      // Add event bytes
-      event.bytes.forEach(byte => trackData.push(byte));
-    }
+    // Time signature: 4/4
+    trackData.push(0x00);                // Delta time: 0
+    trackData.push(0xFF, 0x58, 0x04);    // Time signature event
+    trackData.push(0x04, 0x02, 0x18, 0x08); // 4/4 time
     
-    // Add track header
-    file.push(
-      0x4D, 0x54, 0x72, 0x6B,         // MTrk
-      (trackData.length >> 24) & 0xFF, // Track length
-      (trackData.length >> 16) & 0xFF,
-      (trackData.length >> 8) & 0xFF,
-      trackData.length & 0xFF
+    // Tempo (based on BPM)
+    const tempo = Math.floor(60000000 / progression.bpm);
+    trackData.push(0x00);                // Delta time: 0
+    trackData.push(0xFF, 0x51, 0x03);    // Tempo event
+    trackData.push(
+      (tempo >> 16) & 0xFF,
+      (tempo >> 8) & 0xFF,
+      tempo & 0xFF
     );
     
-    // Add track data
-    trackData.forEach(byte => file.push(byte));
+    // Program change to piano (instrument 0)
+    trackData.push(0x00);                // Delta time: 0
+    trackData.push(0xC0, 0x00);          // Program change, channel 1, piano
     
-    console.log(`MIDI file created: ${file.length} bytes, ${progression.chords.length} chords`);
+    // === Add all chords using a consistent pattern ===
+    // We now know this approach works reliably
+    for (let chordIndex = 0; chordIndex < chordNotes.length; chordIndex++) {
+      const notes = chordNotes[chordIndex];
+      
+      // Delta time before chord (0 for first chord, 253 ticks for others)
+      if (chordIndex === 0) {
+        trackData.push(0x00);          // First chord starts at time 0
+      } else {
+        trackData.push(0x83, 0x3D);    // 253 ticks (gap between chords)
+      }
+      
+      // Note on events - first note in chord
+      trackData.push(0x90, notes[0], 0x64);  // Note on, channel 1, velocity 100
+      
+      // Remaining notes in chord (all start simultaneously)
+      for (let i = 1; i < notes.length; i++) {
+        trackData.push(0x00);            // No delta time
+        trackData.push(0x90, notes[i], 0x64); // Note on
+      }
+      
+      // Add note off events after exactly 131 ticks (0x83 0x03)
+      trackData.push(0x83, 0x03);        // Delta time: 131 ticks
+      
+      // Note off for first note
+      trackData.push(0x80, notes[0], 0x40);  // Note off, channel 1, velocity 64
+      
+      // Remaining note-offs (all end simultaneously)
+      for (let i = 1; i < notes.length; i++) {
+        trackData.push(0x00);            // No delta time
+        trackData.push(0x80, notes[i], 0x40); // Note off
+      }
+    }
     
-    return new Uint8Array(file);
+    // End of track event
+    trackData.push(0x00);                // Delta time: 0
+    trackData.push(0xFF, 0x2F, 0x00);    // End of track
+    
+    // Add MTrk header
+    bytes.push(0x4D, 0x54, 0x72, 0x6B);  // "MTrk" chunk type
+    
+    // Add track length (4 bytes)
+    bytes.push(
+      (trackData.length >> 24) & 0xFF,   // Most significant byte
+      (trackData.length >> 16) & 0xFF,
+      (trackData.length >> 8) & 0xFF,
+      trackData.length & 0xFF            // Least significant byte
+    );
+    
+    // Add all track data
+    for (let i = 0; i < trackData.length; i++) {
+      bytes.push(trackData[i]);
+    }
+    
+    // Create the final Uint8Array
+    const midiData = new Uint8Array(bytes);
+    console.log(`Created MIDI file with ${chordNotes.length} chords, ${midiData.length} bytes`);
+    
+    return midiData;
   };
 
   return (
