@@ -335,6 +335,7 @@ const ChordProgressionGenerator: React.FC = () => {
       'A#': ['A#3', 'D4', 'F4'],
       'Bb': ['Bb3', 'D4', 'F4'],
       'B': ['B3', 'D#4', 'F#4'],
+      'Cb': ['B3', 'D#4', 'F#4'], // Enharmonic with B
       
       // Minor chords
       'Cm': ['C3', 'Eb3', 'G3'],
@@ -354,52 +355,263 @@ const ChordProgressionGenerator: React.FC = () => {
       'A#m': ['A#3', 'C#4', 'F4'],
       'Bbm': ['Bb3', 'Db4', 'F4'],
       'Bm': ['B3', 'D4', 'F#4'],
+      'Cbm': ['B3', 'D4', 'F#4'], // Enharmonic with Bm
       
       // Dominant 7th chords
       'C7': ['C3', 'E3', 'G3', 'Bb3'],
       'C#7': ['C#3', 'F3', 'G#3', 'B3'],
+      'Db7': ['Db3', 'F3', 'Ab3', 'B3'], // Enharmonic with C#7
       'D7': ['D3', 'F#3', 'A3', 'C4'],
       'D#7': ['D#3', 'G3', 'A#3', 'C#4'],
+      'Eb7': ['Eb3', 'G3', 'Bb3', 'Db4'], // Enharmonic with D#7
       'E7': ['E3', 'G#3', 'B3', 'D4'],
       'F7': ['F3', 'A3', 'C4', 'Eb4'],
       'F#7': ['F#3', 'A#3', 'C#4', 'E4'],
+      'Gb7': ['Gb3', 'Bb3', 'Db4', 'E4'], // Enharmonic with F#7
       'G7': ['G3', 'B3', 'D4', 'F4'],
       'G#7': ['G#3', 'C4', 'D#4', 'F#4'],
+      'Ab7': ['Ab3', 'C4', 'Eb4', 'Gb4'], // Enharmonic with G#7
       'A7': ['A3', 'C#4', 'E4', 'G4'],
       'A#7': ['A#3', 'D4', 'F4', 'G#4'],
+      'Bb7': ['Bb3', 'D4', 'F4', 'Ab4'], // Enharmonic with A#7
       'B7': ['B3', 'D#4', 'F#4', 'A4'],
+      'Cb7': ['B3', 'D#4', 'F#4', 'A4'], // Enharmonic with B7
       
       // Major 7th chords
       'Cmaj7': ['C3', 'E3', 'G3', 'B3'],
       'C#maj7': ['C#3', 'F3', 'G#3', 'C4'],
+      'Dbmaj7': ['Db3', 'F3', 'Ab3', 'C4'], // Enharmonic with C#maj7
       'Dmaj7': ['D3', 'F#3', 'A3', 'C#4'],
       'D#maj7': ['D#3', 'G3', 'A#3', 'D4'],
+      'Ebmaj7': ['Eb3', 'G3', 'Bb3', 'D4'], // Enharmonic with D#maj7
       'Emaj7': ['E3', 'G#3', 'B3', 'D#4'],
       'Fmaj7': ['F3', 'A3', 'C4', 'E4'],
       'F#maj7': ['F#3', 'A#3', 'C#4', 'F4'],
+      'Gbmaj7': ['Gb3', 'Bb3', 'Db4', 'F4'], // Enharmonic with F#maj7
       'Gmaj7': ['G3', 'B3', 'D4', 'F#4'],
       'G#maj7': ['G#3', 'C4', 'D#4', 'G4'],
+      'Abmaj7': ['Ab3', 'C4', 'Eb4', 'G4'], // Enharmonic with G#maj7
       'Amaj7': ['A3', 'C#4', 'E4', 'G#4'],
       'A#maj7': ['A#3', 'D4', 'F4', 'A4'],
+      'Bbmaj7': ['Bb3', 'D4', 'F4', 'A4'], // Enharmonic with A#maj7
       'Bmaj7': ['B3', 'D#4', 'F#4', 'A#4'],
+      'Cbmaj7': ['B3', 'D#4', 'F#4', 'A#4'], // Enharmonic with Bmaj7
       
       // Minor 7th chords
       'Cm7': ['C3', 'Eb3', 'G3', 'Bb3'],
       'C#m7': ['C#3', 'E3', 'G#3', 'B3'],
+      'Dbm7': ['Db3', 'E3', 'Ab3', 'B3'], // Enharmonic with C#m7
       'Dm7': ['D3', 'F3', 'A3', 'C4'],
       'D#m7': ['D#3', 'F#3', 'A#3', 'C#4'],
+      'Ebm7': ['Eb3', 'Gb3', 'Bb3', 'Db4'], // Enharmonic with D#m7
       'Em7': ['E3', 'G3', 'B3', 'D4'],
       'Fm7': ['F3', 'Ab3', 'C4', 'Eb4'],
       'F#m7': ['F#3', 'A3', 'C#4', 'E4'],
+      'Gbm7': ['Gb3', 'A3', 'Db4', 'E4'], // Enharmonic with F#m7
       'Gm7': ['G3', 'Bb3', 'D4', 'F4'],
       'G#m7': ['G#3', 'B3', 'D#4', 'F#4'],
+      'Abm7': ['Ab3', 'B3', 'Eb4', 'Gb4'], // Enharmonic with G#m7
       'Am7': ['A3', 'C4', 'E4', 'G4'],
       'A#m7': ['A#3', 'C#4', 'F4', 'G#4'],
-      'Bm7': ['B3', 'D4', 'F#4', 'A4']
+      'Bbm7': ['Bb3', 'Db4', 'F4', 'Ab4'], // Enharmonic with A#m7
+      'Bm7': ['B3', 'D4', 'F#4', 'A4'],
+      'Cbm7': ['B3', 'D4', 'F#4', 'A4'], // Enharmonic with Bm7
+      
+      // Diminished chords (common in jazz and classical)
+      'Cdim': ['C3', 'Eb3', 'Gb3'],
+      'C#dim': ['C#3', 'E3', 'G3'],
+      'Dbdim': ['Db3', 'E3', 'G3'], // Enharmonic with C#dim
+      'Ddim': ['D3', 'F3', 'Ab3'],
+      'D#dim': ['D#3', 'F#3', 'A3'],
+      'Ebdim': ['Eb3', 'Gb3', 'A3'], // Enharmonic with D#dim
+      'Edim': ['E3', 'G3', 'Bb3'],
+      'Fdim': ['F3', 'Ab3', 'B3'],
+      'F#dim': ['F#3', 'A3', 'C4'],
+      'Gbdim': ['Gb3', 'A3', 'C4'], // Enharmonic with F#dim
+      'Gdim': ['G3', 'Bb3', 'Db4'],
+      'G#dim': ['G#3', 'B3', 'D4'],
+      'Abdim': ['Ab3', 'B3', 'D4'], // Enharmonic with G#dim
+      'Adim': ['A3', 'C4', 'Eb4'],
+      'A#dim': ['A#3', 'C#4', 'E4'],
+      'Bbdim': ['Bb3', 'Db4', 'E4'], // Enharmonic with A#dim
+      'Bdim': ['B3', 'D4', 'F4'],
+      
+      // Diminished 7th chords (common in jazz)
+      'Cdim7': ['C3', 'Eb3', 'Gb3', 'A3'],
+      'C#dim7': ['C#3', 'E3', 'G3', 'Bb3'],
+      'Dbdim7': ['Db3', 'E3', 'G3', 'Bb3'], // Enharmonic with C#dim7
+      'Ddim7': ['D3', 'F3', 'Ab3', 'B3'],
+      'Ebdim7': ['Eb3', 'Gb3', 'A3', 'C4'],
+      'Edim7': ['E3', 'G3', 'Bb3', 'Db4'],
+      'Fdim7': ['F3', 'Ab3', 'B3', 'D4'],
+      'Gdim7': ['G3', 'Bb3', 'Db4', 'E4'],
+      'Abdim7': ['Ab3', 'B3', 'D4', 'F4'],
+      'Bbdim7': ['Bb3', 'Db4', 'E4', 'G4'],
+      
+      // Half-diminished chords (m7b5, common in jazz)
+      'Cm7b5': ['C3', 'Eb3', 'Gb3', 'Bb3'],
+      'C#m7b5': ['C#3', 'E3', 'G3', 'B3'],
+      'Dbm7b5': ['Db3', 'E3', 'G3', 'B3'], // Enharmonic with C#m7b5
+      'Dm7b5': ['D3', 'F3', 'Ab3', 'C4'],
+      'Ebm7b5': ['Eb3', 'Gb3', 'A3', 'Db4'],
+      'Em7b5': ['E3', 'G3', 'Bb3', 'D4'],
+      'Fm7b5': ['F3', 'Ab3', 'B3', 'Eb4'],
+      'Gm7b5': ['G3', 'Bb3', 'Db4', 'F4'],
+      'Am7b5': ['A3', 'C4', 'Eb4', 'G4'],
+      'Bm7b5': ['B3', 'D4', 'F4', 'A4'],
+      
+      // Augmented chords (common in jazz and classical)
+      'Caug': ['C3', 'E3', 'G#3'],
+      'C#aug': ['C#3', 'F3', 'A3'],
+      'Daug': ['D3', 'F#3', 'A#3'],
+      'Ebaug': ['Eb3', 'G3', 'B3'],
+      'Eaug': ['E3', 'G#3', 'C4'],
+      'Faug': ['F3', 'A3', 'C#4'],
+      'Gaug': ['G3', 'B3', 'D#4'],
+      'Abaug': ['Ab3', 'C4', 'E4'],
+      'Aaug': ['A3', 'C#4', 'F4'],
+      'Bbaug': ['Bb3', 'D4', 'F#4'],
+      'Baug': ['B3', 'D#4', 'G4'],
+      
+      // Suspended chords (sus4, common in rock and pop)
+      'Csus4': ['C3', 'F3', 'G3'],
+      'C#sus4': ['C#3', 'F#3', 'G#3'],
+      'Dsus4': ['D3', 'G3', 'A3'],
+      'Ebsus4': ['Eb3', 'Ab3', 'Bb3'],
+      'Esus4': ['E3', 'A3', 'B3'],
+      'Fsus4': ['F3', 'Bb3', 'C4'],
+      'Gsus4': ['G3', 'C4', 'D4'],
+      'Absus4': ['Ab3', 'Db4', 'Eb4'],
+      'Asus4': ['A3', 'D4', 'E4'],
+      'Bbsus4': ['Bb3', 'Eb4', 'F4'],
+      'Bsus4': ['B3', 'E4', 'F#4'],
+      
+      // Sus2 chords (common in pop and folk)
+      'Csus2': ['C3', 'D3', 'G3'],
+      'Dsus2': ['D3', 'E3', 'A3'],
+      'Esus2': ['E3', 'F#3', 'B3'],
+      'Fsus2': ['F3', 'G3', 'C4'],
+      'Gsus2': ['G3', 'A3', 'D4'],
+      'Asus2': ['A3', 'B3', 'E4'],
+      'Bsus2': ['B3', 'C#4', 'F#4'],
+      
+      // Add9 chords (common in pop and jazz)
+      'Cadd9': ['C3', 'E3', 'G3', 'D4'],
+      'Dadd9': ['D3', 'F#3', 'A3', 'E4'],
+      'Eadd9': ['E3', 'G#3', 'B3', 'F#4'],
+      'Fadd9': ['F3', 'A3', 'C4', 'G4'],
+      'Gadd9': ['G3', 'B3', 'D4', 'A4'],
+      'Aadd9': ['A3', 'C#4', 'E4', 'B4'],
+      
+      // 6th chords (common in jazz)
+      'C6': ['C3', 'E3', 'G3', 'A3'],
+      'D6': ['D3', 'F#3', 'A3', 'B3'],
+      'E6': ['E3', 'G#3', 'B3', 'C#4'],
+      'F6': ['F3', 'A3', 'C4', 'D4'],
+      'G6': ['G3', 'B3', 'D4', 'E4'],
+      'A6': ['A3', 'C#4', 'E4', 'F#4'],
+      'B6': ['B3', 'D#4', 'F#4', 'G#4'],
+      
+      // Minor 6th chords
+      'Cm6': ['C3', 'Eb3', 'G3', 'A3'],
+      'Dm6': ['D3', 'F3', 'A3', 'B3'],
+      'Em6': ['E3', 'G3', 'B3', 'C#4'],
+      'Fm6': ['F3', 'Ab3', 'C4', 'D4'],
+      'Gm6': ['G3', 'Bb3', 'D4', 'E4'],
+      'Am6': ['A3', 'C4', 'E4', 'F#4'],
+      'Bm6': ['B3', 'D4', 'F#4', 'G#4'],
+      
+      // 9th chords (common in jazz)
+      'C9': ['C3', 'E3', 'G3', 'Bb3', 'D4'],
+      'D9': ['D3', 'F#3', 'A3', 'C4', 'E4'],
+      'F9': ['F3', 'A3', 'C4', 'Eb4', 'G4'],
+      'G9': ['G3', 'B3', 'D4', 'F4', 'A4'],
+      'Bb9': ['Bb3', 'D4', 'F4', 'Ab4', 'C5'],
+      
+      // Minor 9th chords
+      'Cm9': ['C3', 'Eb3', 'G3', 'Bb3', 'D4'],
+      'Dm9': ['D3', 'F3', 'A3', 'C4', 'E4'],
+      'Em9': ['E3', 'G3', 'B3', 'D4', 'F#4'],
+      'Gm9': ['G3', 'Bb3', 'D4', 'F4', 'A4'],
+      'Am9': ['A3', 'C4', 'E4', 'G4', 'B4']
     };
     
-    // If chord not found in map, return a C major as fallback
-    return chordMap[chordName] || ['C3', 'E3', 'G3'];
+    // Try to match the chord in the map directly
+    if (chordMap[chordName]) {
+      return chordMap[chordName];
+    }
+    
+    // If chord not found, attempt to parse it and find a close match
+    // Extract root note and chord type
+    const rootNoteMatch = chordName.match(/^([A-G][b#]?)/);
+    if (!rootNoteMatch) {
+      console.warn(`Couldn't parse chord name: ${chordName}, using C major as fallback`);
+      return chordMap['C']; // Return C major as final fallback
+    }
+    
+    const rootNote = rootNoteMatch[1];
+    const chordType = chordName.substring(rootNote.length);
+    
+    // Check for matching root with different case or spacing in chord type
+    // This handles variations like "Cmaj7" vs "C maj7" or "C Maj7"
+    const normalizedChordType = chordType.toLowerCase().replace(/\s+/g, '');
+    
+    // Map of normalized chord types to standard chord types
+    const chordTypeMap: Record<string, string> = {
+      'maj': '',          // Major triad
+      'major': '',        // Major triad
+      'min': 'm',         // Minor triad
+      'minor': 'm',       // Minor triad
+      'm7b5': 'm7b5',     // Half-diminished
+      'ø': 'm7b5',        // Half-diminished
+      'dim': 'dim',       // Diminished
+      'dim7': 'dim7',     // Diminished 7th
+      '°': 'dim',         // Diminished
+      '°7': 'dim7',       // Diminished 7th
+      'aug': 'aug',       // Augmented
+      '+': 'aug',         // Augmented
+      '7': '7',           // Dominant 7th
+      'dom7': '7',        // Dominant 7th
+      'maj7': 'maj7',     // Major 7th
+      'major7': 'maj7',   // Major 7th
+      'Δ': 'maj7',        // Major 7th
+      'Δ7': 'maj7',       // Major 7th
+      'm7': 'm7',         // Minor 7th
+      'min7': 'm7',       // Minor 7th
+      'minor7': 'm7',     // Minor 7th
+      'sus2': 'sus2',     // Suspended 2nd
+      'sus4': 'sus4',     // Suspended 4th
+      'sus': 'sus4',      // Suspended 4th (default)
+      '6': '6',           // Major 6th
+      'm6': 'm6',         // Minor 6th
+      'min6': 'm6',       // Minor 6th
+      'add9': 'add9',     // Add 9th
+      '9': '9',           // Dominant 9th
+      'm9': 'm9',         // Minor 9th
+      'min9': 'm9'        // Minor 9th
+    };
+    
+    // Try to match the chord type
+    if (chordTypeMap[normalizedChordType]) {
+      const standardChordType = chordTypeMap[normalizedChordType];
+      const standardChordName = rootNote + standardChordType;
+      
+      if (chordMap[standardChordName]) {
+        console.log(`Matched ${chordName} to ${standardChordName}`);
+        return chordMap[standardChordName];
+      }
+    }
+    
+    // If we couldn't match the chord type, try to at least use the correct root note
+    // with a major triad
+    if (chordMap[rootNote]) {
+      console.warn(`Using ${rootNote} major for unrecognized chord: ${chordName}`);
+      return chordMap[rootNote];
+    }
+    
+    // Last resort fallback
+    console.warn(`Couldn't parse chord: ${chordName}, using C major as fallback`);
+    return chordMap['C'];
   };
 
   // Create and download MIDI file
@@ -453,12 +665,16 @@ const ChordProgressionGenerator: React.FC = () => {
     const result: number[] = [];
     let v = value;
     
-    while (v > 0) {
-      let byte = v & 0x7F;
-      v >>= 7;
+    // Make sure we handle larger values properly
+    do {
+      let byte = v & 0x7F; // Take the 7 least significant bits
+      v >>= 7; // Shift right by 7 bits
+      
+      // If there are more bytes to come, set the MSB
       if (v > 0) byte |= 0x80;
-      result.unshift(byte);
-    }
+      
+      result.unshift(byte); // Add to the beginning of the array
+    } while (v > 0);
     
     return result;
   };
@@ -469,22 +685,21 @@ const ChordProgressionGenerator: React.FC = () => {
       return new Uint8Array();
     }
     
-    // Using standard MIDI file format
-    // MThd + <length of header data> + <format> + <number of tracks> + <division>
+    // MIDI header (MThd chunk)
     const header = [
       0x4D, 0x54, 0x68, 0x64, // "MThd"
       0x00, 0x00, 0x00, 0x06, // Header length (always 6 bytes)
-      0x00, 0x00, // Format 0 (single track)
-      0x00, 0x01, // One track
-      0x01, 0xE0  // Division: 480 ticks per quarter note
+      0x00, 0x01, // Format 1 (multiple tracks)
+      0x00, 0x02, // Two tracks (tempo track + chord track)
+      0x00, 0x60  // Division: 96 ticks per quarter note (0x60 = 96)
     ];
     
-    // Prepare all events for the track
-    const events: number[] = [];
+    // First track - tempo and time signature (from reference file)
+    const tempoTrackEvents: number[] = [];
     
     // Set tempo (in microseconds per quarter note)
     const microsecondsPerBeat = Math.round(60000000 / progression.bpm);
-    events.push(
+    tempoTrackEvents.push(
       0x00, // Delta time (immediate)
       0xFF, 0x51, 0x03, // Tempo meta event
       (microsecondsPerBeat >> 16) & 0xFF,
@@ -493,7 +708,7 @@ const ChordProgressionGenerator: React.FC = () => {
     );
     
     // Set time signature (4/4)
-    events.push(
+    tempoTrackEvents.push(
       0x00, // Delta time
       0xFF, 0x58, 0x04, // Time signature meta event
       0x04, // Numerator (4)
@@ -502,82 +717,165 @@ const ChordProgressionGenerator: React.FC = () => {
       0x08  // 32nd notes per quarter note (8)
     );
     
+    // End of track marker
+    tempoTrackEvents.push(
+      0x00, // Delta time
+      0xFF, 0x2F, 0x00 // End of track meta event
+    );
+    
+    // Tempo track byte length needs to be calculated to create the header
+    // Create a temp array to calculate total length
+    const tempoTrackArray = new Uint8Array(tempoTrackEvents);
+    const tempoTrackSize = tempoTrackArray.length;
+    
+    // Create tempo track chunk
+    const tempoTrackHeader = [
+      0x4D, 0x54, 0x72, 0x6B, // "MTrk"
+      (tempoTrackSize >> 24) & 0xFF,
+      (tempoTrackSize >> 16) & 0xFF,
+      (tempoTrackSize >> 8) & 0xFF,
+      tempoTrackSize & 0xFF  // Track length in bytes
+    ];
+    
+    // Second track - chord progression
+    const chordTrackEvents: number[] = [];
+    
     // Set track name
-    const trackName = `${progression.style} in ${progression.key}`;
-    events.push(
+    const trackName = `Omnisphere 1`; // From reference file
+    chordTrackEvents.push(
       0x00, // Delta time
       0xFF, 0x03, trackName.length, // Track name meta event
       ...trackName.split('').map(c => c.charCodeAt(0)) // Track name as bytes
     );
     
-    // Set instrument to Acoustic Grand Piano (program 0)
-    events.push(
-      0x00, // Delta time
-      0xC0, 0x00 // Program change, channel 0, program 0 (Piano)
-    );
-    
     // Calculate timing
-    const ticksPerBeat = 480; // Standard MIDI resolution
-    const beatsPerChord = progression.bars * 4 / progression.chords.length;
-    const ticksPerChord = Math.round(beatsPerChord * ticksPerBeat);
+    const ticksPerBeat = 96; // Based on the header division value
+    const beatsPerChord = 4; // One bar per chord (in 4/4 time)
+    const ticksPerChord = beatsPerChord * ticksPerBeat;
     
-    // Add each chord
-    let currentTime = 0;
-    
+    // Add each chord - based on reference MIDI
     progression.chords.forEach((chord, index) => {
+      // Get the basic chord notes
       const notes = chordToNotes(chord);
       const midiNotes = notes.map(noteToMidiNumber);
       
-      // All notes in chord start simultaneously
-      midiNotes.forEach(note => {
-        events.push(
-          0x00, // Delta time (all notes in a chord start together)
+      // Add additional "color" notes like in the reference
+      // Create bass notes, melody notes, and other embellishments
+      const bassNote = midiNotes[0] - 12; // One octave lower
+      const melodyNotes = [
+        midiNotes[midiNotes.length - 1] + 5, // Higher melody note
+        midiNotes[midiNotes.length - 1] + 7  // Another melody note
+      ];
+      
+      // Combine all notes
+      const allNotes = [
+        bassNote,       // Bass note
+        ...midiNotes,   // Main chord notes
+        ...melodyNotes  // Melody/embellishment notes
+      ];
+      
+      // Note velocities as observed in reference (varying by note type)
+      const velocities = [
+        71,   // Bass note - medium velocity
+        40,   // Root note - softer
+        109,  // Middle note - louder
+        94,   // Middle/high note
+        79,   // High note
+        72,   // Extra note 1 (if any)
+        105   // Extra note 2 (if any)
+      ];
+      
+      // Start all chord notes with slight timing differences for more natural sound
+      allNotes.forEach((note, noteIndex) => {
+        // For the first note or start of a new chord
+        if (noteIndex === 0 && index > 0) {
+          // Add a small delay between chords (about 1/8 note)
+          const delayBetweenChords = Math.round(ticksPerBeat / 8);
+          const delayBytes = encodeVariableLength(delayBetweenChords);
+          delayBytes.forEach(byte => chordTrackEvents.push(byte));
+        } else if (noteIndex === 0) {
+          // First chord, first note - no delay
+          chordTrackEvents.push(0x00);
+        } else {
+          // Slight arpeggio effect between notes in the same chord (1-5 ticks)
+          const arpDelay = 1 + Math.floor(Math.random() * 5);
+          const arpDelayBytes = encodeVariableLength(arpDelay);
+          arpDelayBytes.forEach(byte => chordTrackEvents.push(byte));
+        }
+        
+        // Get velocity or use default
+        const velocity = noteIndex < velocities.length ? 
+          velocities[noteIndex] : 
+          70 + Math.floor(Math.random() * 20); // Random velocity between 70-90
+        
+        chordTrackEvents.push(
           0x90, // Note On, channel 0
-          note,  // Note number
-          0x50   // Velocity (moderate)
+          note, // Note number
+          velocity > 127 ? 127 : velocity // Cap velocity at 127
         );
       });
       
-      // All notes in chord end simultaneously, but the next chord starts after ticksPerChord
-      midiNotes.forEach((note, noteIndex) => {
-        // For the first note of each chord, we include the delta time until the next chord
-        // For other notes, we use delta time 0 since they stop at the same time
-        if (noteIndex === 0) {
-          // Add the delta time
-          const encodedDelta = encodeVariableLength(ticksPerChord);
-          encodedDelta.forEach(byte => events.push(byte));
-        } else {
-          events.push(0x00); // No delay between note-offs in the same chord
-        }
+      // Note Off events - based on reference patterns
+      // Note durations observed in reference (in ticks)
+      const noteDurations = [
+        29,  // Bass note - shorter
+        32,  // Root - medium
+        32,  // Third - medium
+        32,  // Fifth - medium
+        32,  // Seventh - medium
+        20,  // Melody note 1 - shorter
+        12   // Melody note 2 - shortest
+      ];
+      
+      // Each note has individual timing for ending
+      allNotes.forEach((note, noteIndex) => {
+        // Base duration from reference or default duration
+        const baseNoteDuration = (noteIndex < noteDurations.length) ? 
+          noteDurations[noteIndex] : ticksPerBeat;
         
-        events.push(
+        // Add slight randomization for more natural sound
+        const randomFactor = 0.95 + Math.random() * 0.1; // 0.95-1.05
+        const deltaTime = Math.round(baseNoteDuration * randomFactor);
+        const deltaBytes = encodeVariableLength(deltaTime);
+        
+        // Add the delta time
+        deltaBytes.forEach(byte => chordTrackEvents.push(byte));
+        
+        chordTrackEvents.push(
           0x80, // Note Off, channel 0
-          note,  // Note number
-          0x40   // Release velocity (does not really matter)
+          note, // Note number
+          0x40  // Release velocity
         );
       });
     });
     
     // End of track marker
-    events.push(
+    chordTrackEvents.push(
       0x00, // Delta time
       0xFF, 0x2F, 0x00 // End of track meta event
     );
     
-    // Create track chunk
-    const trackHeader = [
+    // Chord track byte length needs to be calculated to create the header
+    // Create a temp array to calculate total length
+    const chordTrackArray = new Uint8Array(chordTrackEvents);
+    const chordTrackSize = chordTrackArray.length;
+    
+    // Create chord track header
+    const chordTrackHeader = [
       0x4D, 0x54, 0x72, 0x6B, // "MTrk"
-      (events.length >> 24) & 0xFF,
-      (events.length >> 16) & 0xFF,
-      (events.length >> 8) & 0xFF,
-      events.length & 0xFF   // Track length in bytes
+      (chordTrackSize >> 24) & 0xFF,
+      (chordTrackSize >> 16) & 0xFF,
+      (chordTrackSize >> 8) & 0xFF,
+      chordTrackSize & 0xFF  // Track length in bytes
     ];
     
     // Combine everything into a single array
     const midiData = new Uint8Array([
       ...header,
-      ...trackHeader,
-      ...events
+      ...tempoTrackHeader,
+      ...tempoTrackEvents,
+      ...chordTrackHeader,
+      ...chordTrackEvents
     ]);
     
     return midiData;
